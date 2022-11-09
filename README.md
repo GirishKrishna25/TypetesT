@@ -1,12 +1,12 @@
 # TypetesT
 
-## packgages installed
+## packages installed
 
-styled-components
-mui
-random-words
+1. styled-components
+2. mui
+3. random-words
 
 ## context-api
 
-alert slider
-theme
+1. alert slider
+2. theme
