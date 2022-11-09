@@ -1,6 +1,6 @@
 # TypetesT
 
-## packgages installed
+## packages installed
 
 1. styled-components
 2. mui
