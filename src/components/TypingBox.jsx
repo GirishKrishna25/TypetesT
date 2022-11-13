@@ -4,11 +4,13 @@
 // createRef() is a function used to create references in the class components. In functinal components, we use them inside callback functions.
 // useRef() is a hook works in the functional components.
 
-import { useState, createRef, useEffect, useRef } from "react";
+import randomWords from "random-words";
+import { useState, createRef, useEffect, useRef, useMemo } from "react";
 import { useTestMode } from "../context/TestMode";
 import UpperMenu from "./UpperMenu";
+import Stats from "./Stats";
 
-export function TypingBox(props) {
+export function TypingBox() {
   // these are used to get the particular character.
   const [currWordIdx, setCurrWordIdx] = useState(0);
   const [currCharIdx, setCurrCharIdx] = useState(0);
@@ -16,6 +18,34 @@ export function TypingBox(props) {
   const [testStarted, setTestStarted] = useState(false);
   const [testEnded, setTestEnded] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
+
+  const [correctChars, setCorrectChars] = useState(0);
+  const [correctWords, setCorrectWords] = useState(0);
+
+  const [wordsArray, setWordsArray] = useState(() => {
+    return randomWords(100);
+  });
+
+  // useMemo is similar to useEffect
+  const words = useMemo(() => {
+    return wordsArray;
+  }, [wordsArray]);
+
+  // depends on above function
+  const wordSpanRef = useMemo(() => {
+    return Array(words.length)
+      .fill(0)
+      .map((i) => createRef(null));
+  }, [words]);
+
+  const resetWordSpanRefClassNames = () => {
+    wordSpanRef.map((i) => {
+      Array.from(i.current.childNodes).map((j) => {
+        j.className = "char";
+      });
+    });
+    wordSpanRef[0].current.childNodes[0].className = "char current";
+  };
 
   const { testTime } = useTestMode();
 
@@ -35,9 +65,6 @@ export function TypingBox(props) {
       }
     ]  
   */
-  const wordSpanRef = Array(props.words.length)
-    .fill(0)
-    .map((idx) => createRef(null));
 
   // timer
   const startTimer = () => {
@@ -67,6 +94,12 @@ export function TypingBox(props) {
 
     // logic for space
     if (e.keyCode === 32) {
+      const correctChar =
+        wordSpanRef[currWordIdx].current.querySelectorAll(".correct");
+      if (correctChar.length === allChildrenSpans.length) {
+        setCorrectWords(correctWords + 1);
+      }
+
       // removing cursor from the word
       if (currCharIdx >= allChildrenSpans.length) {
         // allChildrenSpans[currCharIdx - 1].className = allChildrenSpans[
@@ -137,6 +170,7 @@ export function TypingBox(props) {
     // logic when we enter correct / incorrect key
     if (e.key === allChildrenSpans[currCharIdx].innerText) {
       allChildrenSpans[currCharIdx].className = "char correct";
+      setCorrectChars(correctChars + 1);
     } else {
       allChildrenSpans[currCharIdx].className = "char incorrect";
     }
@@ -154,6 +188,14 @@ export function TypingBox(props) {
     setCurrCharIdx(currCharIdx + 1);
   };
 
+  const calculateWPM = () => {
+    return Math.round(correctChars / 5 / (testTime / 60));
+  };
+
+  const calculateAccuracy = () => {
+    return Math.round((correctWords / currWordIdx) * 100);
+  };
+
   // to reset
   const resetTest = () => {
     setCurrWordIdx(0);
@@ -162,6 +204,9 @@ export function TypingBox(props) {
     setTestEnded(false);
     clearInterval(intervalId);
     setCountDown(testTime);
+    let random = randomWords(100);
+    setWordsArray(random);
+    resetWordSpanRefClassNames();
   };
 
   // this one autofocus on the hidden 'inputfield'. whenever the page loads.
@@ -184,12 +229,12 @@ export function TypingBox(props) {
       <UpperMenu countDown={countDown} />
 
       {testEnded ? (
-        <h1>Test Ended</h1>
+        <Stats wpm={calculateWPM()} accuracy={calculateAccuracy()} />
       ) : (
         <div className="type-box" onClick={focusInput}>
           <div className="words">
             {/* text area */}
-            {props.words.map((word, index) => {
+            {words.map((word, index) => {
               return (
                 <span key={index} className="word" ref={wordSpanRef[index]}>
                   {word.split("").map((char, idx) => {
