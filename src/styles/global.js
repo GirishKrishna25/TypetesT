@@ -64,4 +64,59 @@ export const GlobalStyles = createGlobalStyle`
     .incorrect {
         color: red;
     }
+
+    .current {
+        border-left: 1px solid;
+        animation: blinking 2s infinite;
+        animation-timing-function: ease;
+
+        @keyframes blinking {
+            0% {border-left-color: #fff}
+            25% {border-left-color: #000}
+            50% {border-left-color: #fff}
+            75% {border-left-color: #000}
+            100% {border-left-color: #fff}
+        }
+    }
+    
+    .right {
+        border-right: 1px solid;
+        animation: blinkingRight 2s infinite; 
+        animation-timing-function: ease;
+
+        @keyframes blinkingRight {
+            0% {border-right-color: #fff}
+            25% {border-right-color: #000}
+            50% {border-right-color: #fff}
+            75% {border-right-color: #000}
+            100% {border-right-color: #fff}
+        }
+    }
+
+    .upper-menu {
+        display: flex;
+        max-width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: space-between;
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+
+    .time-modes {
+        display: flex;
+    }
+
+    .counter {
+        cursor: none;
+    }
+
+    .time {
+        margin-right: 1rem;
+    }
+
+    .time:hover {
+        color: yellow;
+        cursor: pointer;
+    }
 `;
