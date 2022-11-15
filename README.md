@@ -5,7 +5,7 @@
 1. styled-components
 2. mui
 3. random-words
-4. react-chartjs-2
+4. chart.js, react-chartjs-2
 
 ## context-api
 
