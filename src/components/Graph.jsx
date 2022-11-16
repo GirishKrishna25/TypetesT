@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useTheme } from "../context/ThemeContext";
 
 ChartJS.register(
   CategoryScale,
@@ -23,6 +24,7 @@ ChartJS.register(
 );
 
 const Graph = ({ graphData }) => {
+  const { theme } = useTheme();
   return (
     <div>
       <Line
@@ -34,7 +36,7 @@ const Graph = ({ graphData }) => {
             {
               data: graphData.map((i) => i[1]),
               label: "WPM",
-              borderColor: "gold",
+              borderColor: theme.title,
             },
           ],
         }}

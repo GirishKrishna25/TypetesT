@@ -9,8 +9,12 @@ export const GlobalStyles = createGlobalStyle`
     }    
 
     body {
-        background: black;
-        color: white;
+        background: ${({ theme }) => {
+          return theme.background;
+        }};
+        color: ${({ theme }) => {
+          return theme.title;
+        }};
         transition: all 0.25s linear;
     }
 
@@ -45,6 +49,9 @@ export const GlobalStyles = createGlobalStyle`
         flex-wrap: wrap;
         align-content: center;
         width: 100%;
+        color: ${({ theme }) => {
+          return theme.typeBoxText;
+        }};
     }
 
     .word {
@@ -58,7 +65,9 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .correct {
-        color: green;
+        color: ${({ theme }) => {
+          return theme.title;
+        }};
     }
 
     .incorrect {
@@ -71,11 +80,21 @@ export const GlobalStyles = createGlobalStyle`
         animation-timing-function: ease;
 
         @keyframes blinking {
-            0% {border-left-color: #fff}
-            25% {border-left-color: #000}
-            50% {border-left-color: #fff}
-            75% {border-left-color: #000}
-            100% {border-left-color: #fff}
+            0% {border-left-color: ${({ theme }) => {
+              return theme.title;
+            }};}
+            25% {border-left-color: ${({ theme }) => {
+              return theme.background;
+            }};}
+            50% {border-left-color: ${({ theme }) => {
+              return theme.title;
+            }};}
+            75% {border-left-color: ${({ theme }) => {
+              return theme.background;
+            }};}
+            100% {border-left-color: ${({ theme }) => {
+              return theme.title;
+            }};}
         }
     }
     
@@ -85,11 +104,21 @@ export const GlobalStyles = createGlobalStyle`
         animation-timing-function: ease;
 
         @keyframes blinkingRight {
-            0% {border-right-color: #fff}
-            25% {border-right-color: #000}
-            50% {border-right-color: #fff}
-            75% {border-right-color: #000}
-            100% {border-right-color: #fff}
+            0% {border-right-color: ${({ theme }) => {
+              return theme.title;
+            }};}
+            25% {border-right-color: ${({ theme }) => {
+              return theme.background;
+            }};}
+            50% {border-right-color: ${({ theme }) => {
+              return theme.title;
+            }};}
+            75% {border-right-color: ${({ theme }) => {
+              return theme.background;
+            }};}
+            100% {border-right-color: ${({ theme }) => {
+              return theme.title;
+            }};}
         }
     }
 
@@ -101,6 +130,9 @@ export const GlobalStyles = createGlobalStyle`
         justify-content: space-between;
         font-size: 1.1rem;
         padding: 1rem;
+        color: ${({ theme }) => {
+          return theme.typeBoxText;
+        }};
     }
 
     .time-modes {
@@ -116,7 +148,9 @@ export const GlobalStyles = createGlobalStyle`
     }
 
     .time:hover {
-        color: yellow;
+        color: ${({ theme }) => {
+          return theme.title;
+        }};;
         cursor: pointer;
     }
 
@@ -130,12 +164,16 @@ export const GlobalStyles = createGlobalStyle`
 
     .title {
         font-size: 20px;
-        color: grey;
+        color: ${({ theme }) => {
+          return theme.typeBoxText;
+        }};;
     }
 
     .subtitle {
         font-size: 30px;
-        color: gold;
+        color: ${({ theme }) => {
+          return theme.title;
+        }};;
     }
 
     .left-stats {
@@ -145,5 +183,14 @@ export const GlobalStyles = createGlobalStyle`
 
     .right-stats {
         width: 70%;
+    }
+
+    .footer, .header {
+        display: flex;
+        width: 1000px;
+        margin-left: auto;
+        margin-right: auto;
+        justify-content: space-between;
+        height: 60px;
     }
 `;
