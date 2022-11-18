@@ -1,25 +1,13 @@
-import { TypingBox } from "./components/TypingBox";
-import { GlobalStyles } from "./styles/global";
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import { ThemeProvider } from "styled-components";
-import { useTheme } from "./context/ThemeContext";
-import { auth } from "./firebaseConfig";
+import HomePage from "./pages/HomePage";
+import UserPage from "./pages/UserPage";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
-  // we are taking theme from contextApi and passing it to the GlobalStyles through ThemeProvider which is a styled-components component.
-  const { theme } = useTheme();
-  // console.log(auth);
-
   return (
-    <ThemeProvider theme={theme}>
-      <div className="canvas">
-        <GlobalStyles />
-        <Header />
-        <TypingBox />
-        <Footer />
-      </div>
-    </ThemeProvider>
+    <Routes>
+      <Route path="/" element={<HomePage />}></Route>
+      <Route path="/user" element={<UserPage />}></Route>
+    </Routes>
   );
 }
 

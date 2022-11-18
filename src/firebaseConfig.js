@@ -13,4 +13,6 @@ const firebaseConfig = {
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-export const auth = firebase.auth(); // enable us to sign-up and login
+const auth = firebase.auth(); // enable us to sign-up and login
+
+export { auth };

@@ -173,7 +173,7 @@ export const GlobalStyles = createGlobalStyle`
         font-size: 30px;
         color: ${({ theme }) => {
           return theme.title;
-        }};;
+        }};; 
     }
 
     .left-stats {
@@ -192,5 +192,9 @@ export const GlobalStyles = createGlobalStyle`
         margin-right: auto;
         justify-content: space-between;
         height: 60px;
+    }
+
+    .theme-options {
+      
     }
 `;
