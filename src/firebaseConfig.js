@@ -1,5 +1,6 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import "firebase/compat/firestore";
 
 // to hide these keys, we stored them in .env and getting from that using process.env
 const firebaseConfig = {
@@ -14,5 +15,5 @@ const firebaseConfig = {
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth(); // enable us to sign-up and login
-
-export { auth };
+const db = firebaseApp.firestore();
+export { auth, db };

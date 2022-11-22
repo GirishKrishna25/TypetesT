@@ -28,13 +28,13 @@
 
 ## firestore
 
-1. 'firestore' is a no-sql database offered by the firebase.
-2. Majority of react applications uses non-sql database.
-3. Mongodb is popular no-sql db.
+- Majority of react applications uses non-sql database.
+- Mongodb is popular no-sql db.
+- 'firestore' is a no-sql database offered by the firebase.
 
 in sql, data stored in the form of tables
-in no-sql, data stored in the form of document.
+in no-sql, data stored in the form of json object.
 
 ## additonal
 
-1. used localStorage to save themes with the help of its methods 'setItem', 'getItem'.
+- used localStorage to save themes with the help of its methods 'setItem', 'getItem'.

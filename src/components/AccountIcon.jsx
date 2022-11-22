@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import LogoutIcon from "@mui/icons-material/Logout";
 import { Modal, AppBar, Tabs, Tab, Box } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
+import LoginForm from "./LoginForm";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { auth } from "../firebaseConfig";
-import { useAuthState, useSignInWithGoogle } from "react-firebase-hooks/auth"; // it has mulitiple folders
+import { useAuthState } from "react-firebase-hooks/auth"; // it has mulitiple folders
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../context/AlertContext";
 import GoogleButton from "react-google-button";
@@ -32,12 +32,36 @@ const AccountIcon = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(0);
 
+  const { setAlert } = useAlert();
+
   const handleValueChange = (e, value) => {
     setValue(value);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    auth
+      .signOut()
+      .then((ok) => {
+        setAlert({
+          open: true,
+          type: "success",
+          message: "logged out",
+        });
+      })
+      .catch((err) => {
+        setAlert({
+          open: true,
+          type: "error",
+          message: "not able to logout",
+        });
+      });
+  };
+
   const classes = useStyles();
 
   // auth.currentUser // through firebase. (both are same)
@@ -50,7 +74,6 @@ const AccountIcon = () => {
     else setOpen(true);
   };
 
-  const { setAlert } = useAlert();
   const googleProvider = new GoogleAuthProvider();
 
   const signInWithGoogle = () => {
@@ -70,29 +93,6 @@ const AccountIcon = () => {
           message: "Not able to Login with Google",
         });
         handleClose();
-      });
-  };
-
-  const logout = () => {
-    auth
-      .signOut()
-      .then((ok) => {
-        setAlert({
-          open: true,
-          type: "success",
-          message: "Logged out",
-        });
-        handleClose(); // check
-        return;
-      })
-      .catch((err) => {
-        setAlert({
-          open: true,
-          type: "warning",
-          message: "not able to logout",
-        });
-        handleClose(); // check
-        return;
       });
   };
 

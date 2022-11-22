@@ -23,14 +23,16 @@ ChartJS.register(
   Legend
 );
 
-const Graph = ({ graphData }) => {
+const Graph = ({ graphData, type }) => {
   const { theme } = useTheme();
   return (
     <div>
       <Line
         data={{
           // x-axis
-          labels: graphData.map((i) => i[0] + 1),
+          labels: graphData.map((i) =>
+            type === "date" ? i[0].toDate().toLocaleString() : i[0] + 1
+          ),
           // y-axis
           datasets: [
             {

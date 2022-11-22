@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Graph from "./Graph";
+import { useAlert } from "../context/AlertContext";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "../firebaseConfig";
 
 const Stats = ({
   wpm,
@@ -20,6 +23,8 @@ const Stats = ({
       [2, 23]
     ]
   */
+  const [user] = useAuthState(auth);
+  const { setAlert } = useAlert();
   // to remove multiple instances in the graph x-axis.
   let timeSet = new Set();
   const newGraph = graphData.filter((i) => {
@@ -28,6 +33,47 @@ const Stats = ({
       return i;
     }
   });
+
+  // to push the results to the database
+  const pushResultsToDB = async () => {
+    const resultsRef = db.collection("Results");
+    const { uid } = auth.currentUser;
+    if (!isNaN(accuracy)) {
+      await resultsRef
+        .add({
+          userId: uid,
+          wpm: wpm,
+          accuracy: accuracy,
+          characters: `${correctChars}/${incorrectChars}/${missedChars}/${extraChars}`,
+          timeStamp: new Date(),
+        })
+        .then((res) => {
+          setAlert({
+            open: true,
+            type: "success",
+            message: "result saved in DataBase.",
+          });
+        });
+    } else {
+      setAlert({
+        open: true,
+        type: "error",
+        message: "invalid test",
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      pushResultsToDB();
+    } else {
+      setAlert({
+        open: true,
+        type: "warning",
+        message: "login to save results",
+      });
+    }
+  }, []);
 
   return (
     <div className="stats-box">
