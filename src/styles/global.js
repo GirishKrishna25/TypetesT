@@ -1,200 +1,215 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        outline: 0;
-    }    
 
-    body {
-        background: ${({ theme }) => {
-          return theme.background;
-        }};
-        color: ${({ theme }) => {
-          return theme.title;
-        }};
-        transition: all 0.25s linear;
+*,
+*::after,
+*::before{
+    box-sizing: border-box;
+}
+body{
+    background:${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.title};
+    padding:0;
+    margin:0;
+    transition: all 0.25s linear;
+    overflow-y: scroll;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+
+.canvas{
+    display: grid;
+    grid-auto-flow:row;
+    grid-template-row: auto 1fr auto;
+    min-height: 100vh;
+    gap:0.5rem;
+    padding:1rem;
+    width:100vw;
+    align-items:center;
+}
+
+.type-box{
+    display:block;
+    max-width:1000px;
+    height: 140px;
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+    overflow:hidden;
+}
+.words{
+    font-size:30px;
+    display:flex;
+    flex-wrap:wrap;
+    align-content:center;
+    width:100%;
+    color:${({ theme }) => theme.typeBoxText}
+}
+.word{
+    margin:5px;
+    padding-right:2px;
+}
+
+.hidden-input{
+    opacity:0
+}
+
+.correct{
+    color:${({ theme }) => theme.title};
+}
+.incorrect{
+    color:red;
+}
+
+.current{
+    border-left: 1px solid;
+    animation: blinking 2s infinite;
+    animation-timing-function: ease;
+    @keyframes blinking{
+        0% {border-left-color:${({ theme }) => theme.title};}
+        25% {border-left-color:${({ theme }) => theme.background};}
+        50% {border-left-color:${({ theme }) => theme.title};}
+        75% {border-left-color:${({ theme }) => theme.background};}
+        100% {border-left-color:${({ theme }) => theme.title};}
     }
+}
 
-    h1 {
-        // font-size: 5rem;
+.right{
+    border-right: 1px solid;
+    animation: blinkingRight 2s infinite;
+    animation-timing-function: ease;
+    @keyframes blinkingRight{
+        0% {border-right-color:${({ theme }) => theme.title};}
+        25% {border-right-color:${({ theme }) => theme.background};}
+        50% {border-right-color:${({ theme }) => theme.title};}
+        75% {border-right-color:${({ theme }) => theme.background};}
+        100% {border-right-color:${({ theme }) => theme.title};}
     }
+}
 
-    .canvas {
-        display: grid;
-        grid-auto-flow: row;
-        grid-template-row: auto 1fr auto;
-        min-height: 100vh;
-        gap: 0.5rem;
-        padding: 1rem;
-        width: 100vw;
-        align-items: center;
-    }
+.upper-menu{
+    display:flex;
+    max-width:1000px;
+    margin-left:auto;
+    margin-right:auto;
+    justify-content: space-between;
+    font-size: 20px;
+    padding:1rem;
+    color: ${({ theme }) => theme.typeBoxText}
+}
 
-    .type-box {
-        display: block;
-        max-width: 1000px;
-        height: 140px;
-        position: relative;
-        margin-left: auto;
-        margin-right: auto;
-        overflow: hidden;
-    }
+.time-modes, .word-mode{
+    display:flex;
+}
 
-    .words {
-        font-size: 30px;
-        display: flex;
-        flex-wrap: wrap;
-        align-content: center;
-        width: 100%;
-        color: ${({ theme }) => {
-          return theme.typeBoxText;
-        }};
-    }
+.counter{
+    cursor:none;
+}
 
-    .word {
-        margin: 5px;
-        padding-right: 2px;
-    }
+.time, .no-of-words{
+    margin-right: 15px;
+}
 
-    .hidden-input {
-        display: block;
-        opacity: 0;
-    }
+.time:hover, .no-of-words:hover{
+    color: ${({ theme }) => theme.title};
+    cursor: pointer;
+}
 
-    .correct {
-        color: ${({ theme }) => {
-          return theme.title;
-        }};
-    }
+.mode:hover{
+    color: ${({ theme }) => theme.title};
+    cursor: pointer;
+}
 
-    .incorrect {
-        color: red;
-    }
+.stats-box{
+    display:flex;
+    max-width:1000px;
+    height:auto;
+    margin-left:auto;
+    margin-right:auto;
+}
 
-    .current {
-        border-left: 1px solid;
-        animation: blinking 2s infinite;
-        animation-timing-function: ease;
+.title{
+    font-size:20x;
+    color:${({ theme }) => theme.typeBoxText};
+}
 
-        @keyframes blinking {
-            0% {border-left-color: ${({ theme }) => {
-              return theme.title;
-            }};}
-            25% {border-left-color: ${({ theme }) => {
-              return theme.background;
-            }};}
-            50% {border-left-color: ${({ theme }) => {
-              return theme.title;
-            }};}
-            75% {border-left-color: ${({ theme }) => {
-              return theme.background;
-            }};}
-            100% {border-left-color: ${({ theme }) => {
-              return theme.title;
-            }};}
-        }
-    }
-    
-    .right {
-        border-right: 1px solid;
-        animation: blinkingRight 2s infinite; 
-        animation-timing-function: ease;
+.subtitle{
+    font-size:30px;
+    color:${({ theme }) => theme.title};
+}
 
-        @keyframes blinkingRight {
-            0% {border-right-color: ${({ theme }) => {
-              return theme.title;
-            }};}
-            25% {border-right-color: ${({ theme }) => {
-              return theme.background;
-            }};}
-            50% {border-right-color: ${({ theme }) => {
-              return theme.title;
-            }};}
-            75% {border-right-color: ${({ theme }) => {
-              return theme.background;
-            }};}
-            100% {border-right-color: ${({ theme }) => {
-              return theme.title;
-            }};}
-        }
-    }
+.left-stats{
+    width:30%;
+    padding:30px;
+}
 
-    .upper-menu {
-        display: flex;
-        max-width: 1000px;
-        margin-left: auto;
-        margin-right: auto;
-        justify-content: space-between;
-        font-size: 1.1rem;
-        padding: 1rem;
-        color: ${({ theme }) => {
-          return theme.typeBoxText;
-        }};
-    }
+.right-stats{
+    width:70%;
+}
 
-    .time-modes {
-        display: flex;
-    }
+.footer, .header{
+    display: flex;
+    width: 1000px;
+    margin-left:auto;
+    margin-right:auto;
+    justify-content: space-between;
+    height:60px;
 
-    .counter {
-        cursor: none;
-    }
+}
 
-    .time {
-        margin-right: 1rem;
-    }
+.result-graph, .table{
+    width: 1000px;
+    margin: auto;
+}
 
-    .time:hover {
-        color: ${({ theme }) => {
-          return theme.title;
-        }};;
-        cursor: pointer;
-    }
+.user-profile{
+    width:1000px;
+    margin:auto;
+    display: flex;
+    min-height: 15rem;
+    background: ${({ theme }) => theme.typeBoxText};
+    border-radius: 20px;
+}
 
-    .stats-box {
-        display: flex;
-        max-width: 1000px;
-        height: auto;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.user{
+    display:flex;
+    width: 50%;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 1rem;
+    border-right: 2px solid;
+}
 
-    .title {
-        font-size: 20px;
-        color: ${({ theme }) => {
-          return theme.typeBoxText;
-        }};;
-    }
+.picture{
+    width:50%;
+}
 
-    .subtitle {
-        font-size: 30px;
-        color: ${({ theme }) => {
-          return theme.title;
-        }};; 
-    }
+.info{
+    width: 50%;
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 1rem;
+}
 
-    .left-stats {
-        width: 30%;
-        padding: 30px;
-    }
+.total-times{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+}
 
-    .right-stats {
-        width: 70%;
-    }
-
-    .footer, .header {
-        display: flex;
-        width: 1000px;
-        margin-left: auto;
-        margin-right: auto;
-        justify-content: space-between;
-        height: 60px;
-    }
-
-    .theme-options {
-      
-    }
+.centre-of-screen{
+    display:flex;
+    min-height:100vh;
+    justify-content:center;
+    align-items: center;
+    text-align: center;
+}
 `;

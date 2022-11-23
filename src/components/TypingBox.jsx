@@ -12,13 +12,20 @@ import Stats from "./Stats";
 
 export function TypingBox() {
   // these are used to get the particular character.
+  const { testTime, testMode, testWords } = useTestMode();
+  // console.log(typeof testTime, typeof testWords);
   const [currWordIdx, setCurrWordIdx] = useState(0);
   const [currCharIdx, setCurrCharIdx] = useState(0);
-  const [countDown, setCountDown] = useState(15);
+  const [countDown, setCountDown] = useState(() => {
+    if (testMode === "words") {
+      return 180;
+    } else {
+      return testTime;
+    }
+  });
   const [testStarted, setTestStarted] = useState(false);
   const [testEnded, setTestEnded] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
-
   const [correctChars, setCorrectChars] = useState(0);
   const [incorrectChars, setIncorrectChars] = useState(0);
   const [extraChars, setExtraChars] = useState(0);
@@ -29,6 +36,9 @@ export function TypingBox() {
   const [graphData, setGraphData] = useState([]);
 
   const [wordsArray, setWordsArray] = useState(() => {
+    if (testMode === "words") {
+      return randomWords(testWords);
+    }
     return randomWords(100);
   });
 
@@ -52,8 +62,6 @@ export function TypingBox() {
     });
     wordSpanRef[0].current.childNodes[0].className = "char current";
   };
-
-  const { testTime } = useTestMode();
 
   // for every html element there is a 'ref' attribute
   const inputTextRef = useRef(null);
@@ -80,12 +88,13 @@ export function TypingBox() {
         setCorrectChars((correctChars) => {
           setGraphData((data) => {
             // data: what currently present in 'graphData'.
+            const startTime = testMode === "words" ? 180 : testTime;
             return [
               ...data,
               [
-                testTime - prevCountDown,
+                startTime - prevCountDown,
                 Math.round(
-                  correctChars / 5 / ((testTime - prevCountDown + 1) / 60) // 1 is added because timer starts from 1
+                  correctChars / 5 / ((startTime - prevCountDown + 1) / 60)
                 ),
               ],
             ];
@@ -117,6 +126,12 @@ export function TypingBox() {
 
     // logic for space
     if (e.keyCode === 32) {
+      //game over logic for word mode
+      if (currWordIndex === wordsArray.length - 1) {
+        clearInterval(intervalId);
+        setTestOver(true);
+        return;
+      }
       const correctChar =
         wordSpanRef[currWordIdx].current.querySelectorAll(".correct");
       const incorrectChar =
@@ -223,7 +238,9 @@ export function TypingBox() {
   };
 
   const calculateWPM = () => {
-    return Math.round(correctChars / 5 / (testTime / 60));
+    return Math.round(
+      correctChars / 5 / ((graphData[graphData.length - 1][0] + 1) / 60)
+    );
   };
 
   const calculateAccuracy = () => {
@@ -238,8 +255,14 @@ export function TypingBox() {
     setTestEnded(false);
     clearInterval(intervalId);
     setCountDown(testTime);
-    let random = randomWords(100);
-    setWordsArray(random);
+    if (testMode === "words") {
+      let random = randomWords(testWords);
+      setWordsArray(random);
+      setCountDown(180);
+    } else {
+      let random = randomWords(100);
+      setWordsArray(random);
+    }
     resetWordSpanRefClassNames();
   };
 
@@ -251,7 +274,7 @@ export function TypingBox() {
 
   useEffect(() => {
     resetTest();
-  }, [testTime]);
+  }, [testTime, testMode, testWords]);
 
   useEffect(() => {
     focusInput();

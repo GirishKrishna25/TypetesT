@@ -11,14 +11,11 @@ const HomePage = () => {
   // console.log(auth);
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className="canvas">
-        <GlobalStyles />
-        <Header />
-        <TypingBox />
-        <Footer />
-      </div>
-    </ThemeProvider>
+    <div className="canvas">
+      <Header />
+      <TypingBox />
+      <Footer />
+    </div>
   );
 };
 
