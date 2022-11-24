@@ -11,9 +11,9 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Graph from "../Components/Graph";
+import Graph from "../components/Graph";
 import { db, auth } from "../firebaseConfig";
-import { useTheme } from "../Context/ThemeContext";
+import { useTheme } from "../context/ThemeContext";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { CircularProgress } from "@material-ui/core";
 

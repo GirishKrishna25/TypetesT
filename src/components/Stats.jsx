@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import Graph from "./Graph";
-import { useAlert } from "../context/AlertContext";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useAlert } from "../context/AlertContext";
 import { auth, db } from "../firebaseConfig";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import Graph from "./Graph";
 
 const Stats = ({
   wpm,
@@ -12,21 +13,11 @@ const Stats = ({
   incorrectChars,
   extraChars,
   missedChars,
+  resetTest,
 }) => {
-  /*
-    graphData = [
-      [0, 23],
-      [0, 23],
-      [1, 26],
-      [1, 26],
-      [2, 23],
-      [2, 23]
-    ]
-  */
   const [user] = useAuthState(auth);
   const { setAlert } = useAlert();
-  // to remove multiple instances in the graph x-axis.
-  let timeSet = new Set();
+  var timeSet = new Set(); //set only stores unique values
   const newGraph = graphData.filter((i) => {
     if (!timeSet.has(i[0])) {
       timeSet.add(i[0]);
@@ -34,11 +25,11 @@ const Stats = ({
     }
   });
 
-  // to push the results to the database
   const pushResultsToDB = async () => {
     const resultsRef = db.collection("Results");
     const { uid } = auth.currentUser;
     if (!isNaN(accuracy)) {
+      //push results  to db
       await resultsRef
         .add({
           userId: uid,
@@ -51,7 +42,7 @@ const Stats = ({
           setAlert({
             open: true,
             type: "success",
-            message: "result saved in DataBase.",
+            message: "result saved to db",
           });
         });
     } else {
@@ -70,7 +61,7 @@ const Stats = ({
       setAlert({
         open: true,
         type: "warning",
-        message: "login to save results",
+        message: "login to save results!",
       });
     }
   }, []);
@@ -78,14 +69,18 @@ const Stats = ({
   return (
     <div className="stats-box">
       <div className="left-stats">
-        <div className="title">WPM</div>
-        <div className="subtitle">{wpm}</div>
-        <div className="title">Accuracy</div>
-        <div className="subtitle">{accuracy}%</div>
-        <div className="title">Characters</div>
-        <div className="subtitle">
-          {correctChars}/{incorrectChars}/{missedChars}/{extraChars}
+        <div className="stats">
+          <div className="title">WPM</div>
+          <div className="subtitle">{wpm}</div>
+          <div className="title">Accuracy</div>
+          <div className="subtitle">{accuracy}%</div>
+          <div className="title">Characters</div>
+          <div className="subtitle">
+            {correctChars}/{incorrectChars}/{missedChars}/{extraChars}
+          </div>
         </div>
+
+        <RestartAltIcon onClick={resetTest} className="reset-btn" />
       </div>
       <div className="right-stats">
         <Graph graphData={newGraph} />

@@ -1,4 +1,4 @@
-import { TypingBox } from "../components/TypingBox";
+import TypingBox from "../components/TypingBox";
 import { GlobalStyles } from "../styles/global";
 import Footer from "../components/Footer";
 import Header from "../components/Header";

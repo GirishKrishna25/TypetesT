@@ -1,11 +1,12 @@
 import React from "react";
 import Select from "react-select";
-import { useTheme } from "../context/ThemeContext";
 import { themeOptions } from "../styles/theme";
+import { useTheme } from "../context/ThemeContext";
 
 const Footer = () => {
-  const { theme, setTheme, defaultTheme } = useTheme();
-  const changeHandler = (e) => {
+  const { setTheme, theme, defaultTheme } = useTheme();
+
+  const handleThemeChange = (e) => {
     // console.log(e);
     setTheme(e.value);
     localStorage.setItem("theme", JSON.stringify(e.value));
@@ -13,25 +14,32 @@ const Footer = () => {
 
   return (
     <div className="footer">
-      <div className="footer-links">Links</div>
-      <div className="theme-options">
-        <Select
-          options={themeOptions}
-          onChange={changeHandler}
-          menuPlacement="top"
-          defaultValue={{ value: defaultTheme, label: defaultTheme.label }}
-          // normal css won't work for dependencies
-          styles={{
-            control: (styles) => ({
-              ...styles,
-              backgroundColor: theme.background,
-            }),
-            menu: (styles) => ({
-              ...styles,
-              backgroundColor: theme.background,
-            }),
-          }}
-        />
+      <div className="instructions">
+        <div className="hint">
+          press <kbd>Tab</kbd> to open commands
+        </div>
+      </div>
+
+      <div className="actual-footer">
+        <div className="footer-links">Links</div>
+        <div className="theme-options">
+          <Select
+            options={themeOptions}
+            menuPlacement="top"
+            onChange={handleThemeChange}
+            defaultValue={{ value: defaultTheme, label: defaultTheme.label }}
+            styles={{
+              control: (styles) => ({
+                ...styles,
+                backgroundColor: theme.background,
+              }),
+              menu: (styles) => ({
+                ...styles,
+                backgroundColor: theme.background,
+              }),
+            }}
+          />
+        </div>
       </div>
     </div>
   );

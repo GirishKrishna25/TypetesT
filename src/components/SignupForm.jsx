@@ -1,20 +1,26 @@
-import { Box, Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
-import { auth } from "../firebaseConfig";
-import errorMapping from "../Utils/errorMessages";
+import { Box, Button, TextField } from "@material-ui/core";
+import { auth, db } from "../firebaseConfig";
+import errorMapping from "../utils/errorMessages";
 import { useAlert } from "../context/AlertContext";
 import { useTheme } from "../context/ThemeContext";
 
 const SignupForm = ({ handleClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const { setAlert } = useAlert();
   const { theme } = useTheme();
 
-  const { setAlert } = useAlert();
+  const checkUserNameAvailability = async () => {
+    const ref = db.collection("usernames").doc(`${username}`);
+    const response = await ref.get();
+    console.log(response);
+    return !response.exists;
+  };
 
-  const handleSignup = () => {
+  const handleSubmit = async () => {
     if (!email || !password || !confirmPassword) {
       setAlert({
         open: true,
@@ -23,36 +29,51 @@ const SignupForm = ({ handleClose }) => {
       });
       return;
     }
+
     if (password !== confirmPassword) {
       setAlert({
         open: true,
         type: "warning",
-        message: "Passwords mismatch",
+        message: "Password Mismatch",
       });
       return;
     }
 
-    // this one stores user's email and password in firebase when we signup.
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((ok) => {
-        setAlert({
-          open: true,
-          type: "success",
-          message: "Account created.",
+    if (await checkUserNameAvailability()) {
+      console.log("username not taken");
+      auth
+        .createUserWithEmailAndPassword(email, password)
+        .then(async (res) => {
+          const ref = await db
+            .collection("usernames")
+            .doc(`${username}`)
+            .set({
+              uid: res.user.uid,
+            })
+            .then((response) => {
+              setAlert({
+                open: true,
+                type: "success",
+                message: "Account created",
+              });
+              handleClose();
+            });
+        })
+        .catch((err) => {
+          setAlert({
+            open: true,
+            type: "error",
+            message: errorMapping[err.code] || "Some error occured",
+          });
         });
-        handleClose();
-      })
-      .catch((err) => {
-        // console.log(err);
-        // alert(errorMapping[err.code] || "some error occurred"); // incase if its value is 'undefined'
-        setAlert({
-          open: true,
-          type: "error",
-          message: errorMapping[err.code] || "some error occured",
-        });
-        handleClose();
+    } else {
+      console.log("username taken");
+      setAlert({
+        open: true,
+        type: "warning",
+        message: "username already taken",
       });
+    }
   };
 
   return (
@@ -63,13 +84,29 @@ const SignupForm = ({ handleClose }) => {
         flexDirection: "column",
         gap: "20px",
         backgroundColor: "transparent",
-        padding: "10px",
+        padding: 10,
       }}
     >
       <TextField
-        type="email"
         variant="outlined"
-        label="Enter Email"
+        type="text"
+        label="Enter username"
+        onChange={(e) => setUsername(e.target.value)}
+        InputLabelProps={{
+          style: {
+            color: theme.title,
+          },
+        }}
+        InputProps={{
+          style: {
+            color: theme.title,
+          },
+        }}
+      ></TextField>
+      <TextField
+        variant="outlined"
+        type="email"
+        label="Enter email"
         onChange={(e) => setEmail(e.target.value)}
         InputLabelProps={{
           style: {
@@ -83,9 +120,9 @@ const SignupForm = ({ handleClose }) => {
         }}
       ></TextField>
       <TextField
-        type="password"
         variant="outlined"
-        label="Enter Password"
+        type="password"
+        label="Enter password"
         onChange={(e) => setPassword(e.target.value)}
         InputLabelProps={{
           style: {
@@ -99,9 +136,9 @@ const SignupForm = ({ handleClose }) => {
         }}
       ></TextField>
       <TextField
-        type="password"
         variant="outlined"
-        label="confirm Password"
+        type="password"
+        label="Confirm password"
         onChange={(e) => setConfirmPassword(e.target.value)}
         InputLabelProps={{
           style: {
@@ -118,7 +155,7 @@ const SignupForm = ({ handleClose }) => {
         variant="contained"
         size="large"
         style={{ backgroundColor: theme.title, color: theme.background }}
-        onClick={handleSignup}
+        onClick={handleSubmit}
       >
         Signup
       </Button>

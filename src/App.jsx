@@ -1,14 +1,22 @@
+import { Route, Routes } from "react-router-dom";
+import { ThemeProvider } from "styled-components";
+import Alert from "./components/Alerts";
+import { useTheme } from "./context/ThemeContext";
 import HomePage from "./pages/HomePage";
 import UserPage from "./pages/UserPage";
-import { Routes, Route } from "react-router-dom";
-import Alerts from "./components/Alerts";
+import { GlobalStyles } from "./styles/global";
+
+// import Footer from "./Components/Footer";
+// import Header from "./Components/Header";
+// import TypingBox from "./Components/TypingBox";
+// import { auth } from "./firebaseConfig";
 
 function App() {
   const { theme } = useTheme();
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyles />
-      <Alerts />
+      <Alert />
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/user" element={<UserPage />}></Route>

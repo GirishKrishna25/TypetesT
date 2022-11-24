@@ -3,14 +3,14 @@
 
 // createRef() is a function used to create references in the class components. In functinal components, we use them inside callback functions.
 // useRef() is a hook works in the functional components.
-
+import { Dialog, DialogTitle } from "@material-ui/core";
 import randomWords from "random-words";
 import { useState, createRef, useEffect, useRef, useMemo } from "react";
 import { useTestMode } from "../context/TestMode";
 import UpperMenu from "./UpperMenu";
 import Stats from "./Stats";
 
-export function TypingBox() {
+const TypingBox = () => {
   // these are used to get the particular character.
   const { testTime, testMode, testWords } = useTestMode();
   // console.log(typeof testTime, typeof testWords);
@@ -34,7 +34,7 @@ export function TypingBox() {
   const [correctWords, setCorrectWords] = useState(0);
 
   const [graphData, setGraphData] = useState([]);
-
+  const [openDialog, setOpenDialog] = useState(false);
   const [wordsArray, setWordsArray] = useState(() => {
     if (testMode === "words") {
       return randomWords(testWords);
@@ -63,6 +63,47 @@ export function TypingBox() {
     wordSpanRef[0].current.childNodes[0].className = "char current";
   };
 
+  const handleDialogEvents = (e) => {
+    // space key logic
+    if (e.keyCode === 32) {
+      e.preventDefault();
+      redoTest();
+      setOpenDialog(false);
+      return;
+    }
+
+    //tab/enter key logic
+    if (e.keyCode === 9 || e.keyCode === 13) {
+      e.preventDefault();
+      resetTest();
+      setOpenDialog(false);
+      return;
+    }
+
+    e.preventDefault();
+    setOpenDialog(false);
+    startTimer();
+  };
+
+  const redoTest = () => {
+    setCurrCharIdx(0);
+    setCurrWordIdx(0);
+    setTestStarted(false);
+    setTestEnded(false);
+    clearInterval(intervalId);
+    setCountDown(testTime);
+    if (testMode === "words") {
+      setCountDown(180);
+    }
+    setGraphData([]);
+    setCorrectChars(0);
+    setIncorrectChars(0);
+    setCorrectWords(0);
+    setMissedChars(0);
+    setExtraChars(0);
+    resetWordSpanRefClassNames();
+  };
+
   // for every html element there is a 'ref' attribute
   const inputTextRef = useRef(null);
 
@@ -77,12 +118,14 @@ export function TypingBox() {
       {
         current: null
       }
-    ]  
+    ]
   */
 
   // timer
   const startTimer = () => {
-    const timer = () => {
+    const intervalId = setInterval(timer, 1000);
+    setIntervalId(intervalId);
+    function timer() {
       setCountDown((prevCountDown) => {
         // for graph: to know how many correct characters typed upto a particular time
         setCorrectChars((correctChars) => {
@@ -102,7 +145,7 @@ export function TypingBox() {
           return correctChars;
         });
 
-        if (prevCountDown === 0) {
+        if (prevCountDown === 1) {
           clearInterval(intervalId);
           setCountDown(0);
           setTestEnded(true);
@@ -110,12 +153,20 @@ export function TypingBox() {
           return prevCountDown - 1;
         }
       });
-    };
-    const intervalId = setInterval(timer, 1000);
-    setIntervalId(intervalId);
+    }
   };
 
   const keyDownHandler = (e) => {
+    //logic for tab
+    if (e.keyCode === 9) {
+      if (testStarted) {
+        clearInterval(intervalId);
+      }
+      e.preventDefault();
+      setOpenDialog(true);
+      return;
+    }
+
     if (!testStarted) {
       startTimer();
       setTestStarted(true);
@@ -127,9 +178,9 @@ export function TypingBox() {
     // logic for space
     if (e.keyCode === 32) {
       //game over logic for word mode
-      if (currWordIndex === wordsArray.length - 1) {
+      if (currWordIdx === wordsArray.length - 1) {
         clearInterval(intervalId);
-        setTestOver(true);
+        setTestEnded(true);
         return;
       }
       const correctChar =
@@ -263,6 +314,13 @@ export function TypingBox() {
       let random = randomWords(100);
       setWordsArray(random);
     }
+
+    setGraphData([]);
+    setCorrectChars(0);
+    setIncorrectChars(0);
+    setCorrectWords(0);
+    setMissedChars(0);
+    setExtraChars(0);
     resetWordSpanRefClassNames();
   };
 
@@ -283,47 +341,63 @@ export function TypingBox() {
 
   return (
     <div>
-      <UpperMenu countDown={countDown} />
-
       {testEnded ? (
         <Stats
+          resetTest={resetTest}
           wpm={calculateWPM()}
           accuracy={calculateAccuracy()}
           graphData={graphData}
           correctChars={correctChars}
           incorrectChars={incorrectChars}
-          missedChars={missedChars}
           extraChars={extraChars}
+          missedChars={missedChars}
         />
       ) : (
-        <div className="type-box" onClick={focusInput}>
-          <div className="words">
-            {/* text area */}
-            {words.map((word, index) => {
-              return (
-                <span key={index} className="word" ref={wordSpanRef[index]}>
-                  {word.split("").map((char, idx) => {
-                    return (
-                      <span key={idx} className="char">
-                        {char}
-                      </span>
-                    );
-                  })}
+        <>
+          <UpperMenu countDown={countDown} currWordIdx={currWordIdx} />
+          <div className="type-box" onClick={focusInput}>
+            <div className="words">
+              {/* spans of words and chars */}
+              {words.map((word, index) => (
+                <span className="word" ref={wordSpanRef[index]} key={index}>
+                  {word.split("").map((char, idx) => (
+                    <span className="char" key={`char${idx}`}>
+                      {char}
+                    </span>
+                  ))}
                 </span>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
-
       <input
         type="text"
         className="hidden-input"
         ref={inputTextRef}
-        onKeyDown={(e) => {
-          keyDownHandler(e);
-        }}
+        onKeyDown={(e) => keyDownHandler(e)}
       />
+      <Dialog
+        PaperProps={{
+          style: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
+        open={openDialog}
+        onKeyDown={handleDialogEvents}
+        style={{
+          backdropFilter: "blur(2px)",
+        }}
+      >
+        <DialogTitle>
+          <div className="instruction">press Space to redo</div>
+          <div className="instruction">pres Tab/Enter to restart</div>
+          <div className="instruction">press any other key to exit</div>
+        </DialogTitle>
+      </Dialog>
     </div>
   );
-}
+};
+
+export default TypingBox;
