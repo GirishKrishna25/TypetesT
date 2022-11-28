@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import Alert from "./components/Alerts";
-import ComparePage from "./Pages/ComparePage";
+import ComparePage from "./pages/ComparePage";
 import { useTheme } from "./context/ThemeContext";
 import HomePage from "./pages/HomePage";
 import UserPage from "./pages/UserPage";
