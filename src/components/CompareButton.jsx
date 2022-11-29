@@ -2,9 +2,10 @@ import { Button, makeStyles, Modal, TextField } from "@material-ui/core";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import { auth, db } from "../firebaseConfig";
+// userdefined hooks
 import { useAlert } from "../context/AlertContext";
 import { useTheme } from "../context/ThemeContext";
-import { auth, db } from "../firebaseConfig";
 
 const useStyles = makeStyles(() => ({
   modal: {
