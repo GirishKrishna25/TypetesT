@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Graph from "../Components/Graph";
+import Graph from "../components/Graph";
 import { auth, db } from "../firebaseConfig";
 
 const ComparePage = () => {
