@@ -21,7 +21,9 @@ const Footer = () => {
       </div>
 
       <div className="actual-footer">
-        <div className="footer-links">Links</div>
+        <div className="footer-links">
+          <button>Click Me</button>
+        </div>
         <div className="theme-options">
           <Select
             options={themeOptions}

@@ -8,12 +8,12 @@ import Graph from "./Graph";
 const Stats = ({
   wpm,
   accuracy,
-  graphData,
   correctChars,
   incorrectChars,
   extraChars,
   missedChars,
   resetTest,
+  graphData,
 }) => {
   const [user] = useAuthState(auth);
   const { setAlert } = useAlert();
@@ -79,7 +79,6 @@ const Stats = ({
             {correctChars}/{incorrectChars}/{missedChars}/{extraChars}
           </div>
         </div>
-
         <RestartAltIcon onClick={resetTest} className="reset-btn" />
       </div>
       <div className="right-stats">

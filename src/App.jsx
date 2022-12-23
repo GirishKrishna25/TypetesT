@@ -7,11 +7,6 @@ import HomePage from "./pages/HomePage";
 import UserPage from "./pages/UserPage";
 import { GlobalStyles } from "./styles/global";
 
-// import Footer from "./Components/Footer";
-// import Header from "./Components/Header";
-// import TypingBox from "./Components/TypingBox";
-// import { auth } from "./firebaseConfig";
-
 function App() {
   const { theme } = useTheme();
   return (

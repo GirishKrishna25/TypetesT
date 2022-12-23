@@ -144,8 +144,3 @@ const UserPage = () => {
 };
 
 export default UserPage;
-
-// 1. fetch all the result data from firestore
-// 2. put all of it in an array
-// 3. make a Map, (mapping will be from uid to result object)
-// 4. loop over the array and check if the uid is present in map, if it is present then check that result.wpm<i.wpm, change the result object

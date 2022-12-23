@@ -11,8 +11,7 @@ import UpperMenu from "./UpperMenu";
 import Stats from "./Stats";
 
 const TypingBox = () => {
-  // these are used to get the particular character.
-  const { testTime, testMode, testWords } = useTestMode();
+  const { testMode, testTime, testWords } = useTestMode();
   // console.log(typeof testTime, typeof testWords);
   const [currWordIdx, setCurrWordIdx] = useState(0);
   const [currCharIdx, setCurrCharIdx] = useState(0);
@@ -350,7 +349,6 @@ const TypingBox = () => {
     <div>
       {testEnded ? (
         <Stats
-          resetTest={resetTest}
           wpm={calculateWPM()}
           accuracy={calculateAccuracy()}
           graphData={graphData}
@@ -358,6 +356,7 @@ const TypingBox = () => {
           incorrectChars={incorrectChars}
           extraChars={extraChars}
           missedChars={missedChars}
+          resetTest={resetTest}
         />
       ) : (
         <>

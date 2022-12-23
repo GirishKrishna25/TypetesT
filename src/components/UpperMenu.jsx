@@ -5,16 +5,16 @@ const UpperMenu = ({ countDown, currWordIndex }) => {
   const { setTestTime, testMode, setTestMode, setTestWords, testWords } =
     useTestMode();
 
+  const setMode = (e) => {
+    setTestMode(e.target.id);
+  };
+
   const updateTime = (e) => {
     setTestTime(e.target.id);
   };
 
   const updateWords = (e) => {
     setTestWords(Number(e.target.id));
-  };
-
-  const setMode = (e) => {
-    setTestMode(e.target.id);
   };
 
   return (

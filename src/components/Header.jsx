@@ -7,7 +7,7 @@ const Header = () => {
     <div className="header">
       <div className="logo" style={{ display: "flex" }}>
         <span style={{ display: "block", marginRight: "6px" }}>TypetesT</span>
-        <CompareButton />
+        <CompareButton />x
       </div>
       <div className="icons">
         <AccountIcon />
